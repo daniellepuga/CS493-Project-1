@@ -72,6 +72,7 @@ app.get('/businesses', (req, res) => {
 app.use(express.json());
 
 // use Postman to test this
+// create new business
 app.post('/businesses', jsonParser, (req, res) => {
     if (req.body && req.body.name) {
         businesses.push(req.body);
@@ -89,6 +90,45 @@ app.post('/businesses', jsonParser, (req, res) => {
             business: '/businesses/' + id
         }
     });
+});
+
+app.get('/businesses/:businessID', (req, res, next) => {
+    var businessID = parseInt(req.params.businessID);
+    if (businesses[businessID]) {
+        res.status(200).json(businesses[businessID]);
+    } else {
+        next();
+    }
+});
+
+app.put('/businesses/:businessID', (req, res) => {
+    var businessID = parseInt(req.params.businessID);
+    if (businesses[businessID]) {
+        if (req.body && req.body.name) {
+            businesses[businessID] = req.body;
+            res.status(200).json({
+                links: {
+                    business: '/businesses/' + businessID
+                }
+        });
+        } else {
+            res.status(400).json({
+                err: "Request needs a JSON body with a name field"
+            });
+        }
+    } else {
+        next();
+    }
+});
+
+app.delete('/businesses/:businessID', (req, res, next) => {
+    var businessID = parseInt(req.params.businessID);
+    if (businesses[businessID]) {
+        businesses[businessID] = null;
+        res.status(204).end();
+    } else {
+        next();
+    }
 });
 
 
