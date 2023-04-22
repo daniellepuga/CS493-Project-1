@@ -1,0 +1,35 @@
+CURL TEST COMMANDS:
+
+Business Tests:
+
+List details of a specific businesses:                    
+curl -v http://localhost:3000/businesses/2
+
+View all businesses:
+curl -v http://localhost:3000/businesses
+
+Post a new business:
+curl -v -X POST -H 'Content-Type: application/json' -d '{"businessName": "Test123", "businessAddress": "123 Cherry Tree Lane", "businessCity": "Bend", "businessState": "Oregon", "businessZip": "55555", "businessPhone": "555-123-4567", "businessCategory": "Restaurant", "businessSubcategory": "Pizza", "businessWebsite": "", "businessEmail": ""}' http://localhost:3000/businesses
+
+Now we can update this new business we just made:
+curl -v -X PUT -H 'Content-Type: application/json' -d '{"businessName": "Test123", "businessAddress": "456 New Address Lane", "businessCity": "WeMoved", "businessState": "Oregon", "businessZip": "55555", "businessPhone": "555-123-4567", "businessCategory": "Restaurant", "businessSubcategory": "Pizza", "businessWebsite": "", "businessEmail": ""}' http://localhost:3000/businesses/3
+
+Delete an existing business:
+curl -v -X DELETE http://localhost:3000/businesses/3
+
+-----
+
+Review Tests:
+
+Post a new review:
+curl -v -X POST -H 'Content-Type: application/json' -d '{"starRating": "3", "costRating": "1"}' http://localhost:3000/reviews
+
+Update an existing review:
+curl -v -X PUT -H 'Content-Type: application/json' -d '{"starRating": "5", "costRating": "2"}' http://localhost:3000/reviews/1
+
+Delete an existing review:
+curl -v -X DELETE http://localhost:3000/reviews/2
+
+-----
+
+Photo Tests:
