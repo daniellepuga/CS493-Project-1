@@ -43,11 +43,7 @@ Users may upload files containing photos of a business with a caption:
 curl -v -X POST -H 'Content-Type: application/json' -d '{"imageSrc": "/testphoto.jpg", "imageCaption": "Wowee!!"}'
 
 Users may remove photos they've uploaded:
+curl -v -X DELETE http://localhost:3000/photos/2
 
 Users may modify the caption of a photo:
-
-Uers may list all the businesses they own:
-
-Users may list all the reviews they've uploaded:
-
-Users may list all the photos they've uploaded:
+curl -v -X PUT -H 'Content-Type: application/json' -d '{"imageFile": "/test2.jpg", "caption": "It's broken"}' http://localhost:3000/reviews/4

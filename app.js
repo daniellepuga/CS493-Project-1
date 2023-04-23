@@ -50,27 +50,27 @@ let businesses = [
     },
 
     { name: "Chop Shop",
-    address: "9541 Snack St",
-    city: "Cookington",
-    state: "OR",
-    zip: "13372",
-    phone: "555-1357-1111",
-    category: "Shop",
-    subcategory: "Food Service",
-    website: "https://www.shoptillyouchop.com",
-    email: "",
+      address: "9541 Snack St",
+      city: "Cookington",
+      state: "OR",
+      zip: "13372",
+      phone: "555-1357-1111",
+      category: "Shop",
+      subcategory: "Food Service",
+      website: "https://www.shoptillyouchop.com",
+      email: "",
     },
 
     { name: "Los Pollos Hermanos",
-    address: "308 Negra Arroyo Lane",
-    city: "Albequerque",
-    state: "NM",
-    zip: "87104",
-    phone: "555-111-2222",
-    category: "Restaurant",
-    subcategory: "Fast Food",
-    website: "",
-    email: "gustavo@fring.com",
+      address: "308 Negra Arroyo Lane",
+      city: "Albequerque",
+      state: "NM",
+      zip: "87104",
+      phone: "555-111-2222",
+      category: "Restaurant",
+      subcategory: "Fast Food",
+      website: "",
+      email: "gustavo@fring.com",
     },
 ]
 
@@ -94,6 +94,14 @@ let reviews = [
 let photos = [
     {  imageSrc: "/test.jpg",
        imageCaption: "This is a test!",
+    },
+    {
+       imageSrc: "/newimage.jpg",
+       imageCaption: "Let's test this image out.",
+    },
+    {
+       imageSrc:"/imagination.jpg",
+       imageCaption: "Here we can imagine a new photo!",
     }
 ]
 
@@ -103,9 +111,9 @@ app.get('/', (req, res) => {
     res.send("Welcome to root URL of the Project 1 server");
 });
 
-function validate(){
+// function validate(){
 
-}
+// }
 
 // Businesses API endpoints & page logic
 app.get('/businesses', (req, res) => {
@@ -140,14 +148,15 @@ app.get('/businesses', (req, res) => {
 app.use(express.json());
 
 // use Postman to test this
+
 // Post a new business
 app.post('/businesses', jsonParser, (req, res) => {
-    if (req.body && req.body.name) {
+    if (req.body && req.body.name && req.body.address && req.body.city && req.body.state && req.body.zip && req.body.phone && req.body.category && req.body.subcategory) {
         businesses.push(req.body);
         res.json({"status": "ok"});
     } else {
         res.status(400).json({
-            err: "Request needs a JSON body with a name field"
+            err: "Request needs a JSON body with a all required fields"
         });
     }
 
@@ -174,7 +183,7 @@ app.get('/businesses/:businessID', (req, res, next) => {
 app.put('/businesses/:businessID', (req, res) => {
     var businessID = parseInt(req.params.businessID);
     if (businesses[businessID]) {
-        if (req.body && req.body.name) {
+        if (req.body && req.body.name && req.body.address && req.body.city && req.body.state && req.body.zip && req.body.phone && req.body.category && req.body.subcategory) {
             businesses[businessID] = req.body;
             res.status(200).json({
                 links: {
@@ -183,7 +192,7 @@ app.put('/businesses/:businessID', (req, res) => {
         });
         } else {
             res.status(400).json({
-                err: "Request needs a JSON body with a name field"
+                err: "Request needs a JSON body with all required fields"
             });
         }
     } else {
