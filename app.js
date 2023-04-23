@@ -336,7 +336,7 @@ app.post('/photos', jsonParser, (req, res) => {
         res.json({"status": "ok"});
     } else {
         res.status(400).json({
-            err: "Request needs a JSON body with an Image"
+            err: "Request needs a JSON body with an image source field"
         });
     }
 
@@ -362,7 +362,7 @@ app.put('/photos/:photoID', (req, res, next) => {
         });
         } else {
             res.status(400).json({
-                err: "Request needs a JSON body with an image"
+                err: "Request needs a JSON body with an image source field"
             });
         }
     } else {
