@@ -212,12 +212,12 @@ app.get('/reviews', (req, res) => {
     var pageReviews = reviews.slice(start, end);
     var links = {};
     if (page < lastPage) {
-        links.nextPage = 'reviews?page=' + (page + 1);
-        links.lastPage = 'reviews?page=' + lastPage;
+        links.nextPage = '/reviews?page=' + (page + 1);
+        links.lastPage = '/reviews?page=' + lastPage;
     }
     if (page > 1) {
-        links.prevPage = 'reviews?page=' + (page - 1);
-        links.firstPage = 'reviews?page=1';
+        links.prevPage = '/reviews?page=' + (page - 1);
+        links.firstPage = '/reviews?page=1';
     }  
     
     res.status(200).json({
@@ -233,8 +233,10 @@ app.get('/reviews', (req, res) => {
 // Post a review
 app.post('/reviews', jsonParser, (req, res) => {
     if (req.body && req.body.starRating && req.body.costRating) {
+        if(req.body.starRating > -1 && req.body.starRating < 6){
+            if(req.body.costRating > 0 && req.body.costRating <  5){
         reviews.push(req.body);
-        res.json({"status": "200 OK"});
+        res.json({"status": "200 OK"});}}
     } else {
         res.status(400).json({
             err: "Request needs a JSON body with a star rating field, and a dollar rating field"
@@ -255,15 +257,17 @@ app.put('/reviews/:reviewID', (req, res, next) => {
     var reviewID = parseInt(req.params.reviewID);
     if (reviews[reviewID]) {
         if (req.body && req.body.starRating && req.body.costRating) {
-            reviews[reviewID] = req.body;
-            res.status(200).json({
-                links: {
-                    review: '/reviews/' + reviewID
-                }
+            if(req.body.starRating > -1 && req.body.starRating < 6){
+                if(req.body.costRating > 0 && req.body.costRating < 5){
+                    reviews[reviewID] = req.body;
+                    res.status(200).json({
+                        links: {
+                            review: '/reviews/' + reviewID
+                        }
         });
-        } else {
+        }}} else {
             res.status(400).json({
-                err: "Request needs a JSON body with a star rating field, and a cost rating field"
+                err: "Request needs a JSON body with a star rating field with value between 0 and 5, and a cost rating field with value between 1 and 4."
             });
         }
     } else {
@@ -295,12 +299,12 @@ app.get('/photos', (req, res) => {
     var pagephotos = photos.slice(start, end);
     var links = {};
     if (page < lastPage) {
-        links.nextPage = 'photos?page=' + (page + 1);
-        links.lastPage = 'photos?page=' + lastPage;
+        links.nextPage = '/photos?page=' + (page + 1);
+        links.lastPage = '/photos?page=' + lastPage;
     }
     if (page > 1) {
-        links.prevPage = 'photos?page=' + (page - 1);
-        links.firstPage = 'photos?page=1';
+        links.prevPage = '/photos?page=' + (page - 1);
+        links.firstPage = '/photos?page=1';
     }  
     
     res.status(200).json({
@@ -328,7 +332,7 @@ app.post('/photos', jsonParser, (req, res) => {
     res.status(201).json({
         id: id,
         links: {
-            review: 'photos/' + id
+            photos: '/photos/' + id
         }
     });
 });
@@ -341,12 +345,12 @@ app.put('/photos/:photoID', (req, res, next) => {
             photos[photoID] = req.body;
             res.status(200).json({
                 links: {
-                    photos: 'photos/' + photoID
+                    photos: '/photos/' + photoID
                 }
         });
         } else {
             res.status(400).json({
-                err: "Request needs a JSON body with an Image"
+                err: "Request needs a JSON body with an image"
             });
         }
     } else {
@@ -360,6 +364,76 @@ app.delete('/photos/:photoID', (req, res, next) => {
     if (photos[photoID]) {
         photos[photoID] = null;
         res.status(204).end();
+    } else {
+        next();
+    }
+});
+
+// Get photos for only specific business
+app.get('/photos/:photoID/businesses', (req, res, next) => {
+    var photoID = parseInt(req.params.photoID);
+    var page = parseInt(req.query.page) || 1;
+    var numPerPage = 10;
+    var lastPage = Math.ceil(businesses.length / numPerPage);
+    page = page < 1 ? 1 : page;
+    page = page > lastPage ? lastPage : page;
+    var start = (page - 1) * numPerPage;
+    var end = start + numPerPage;
+    var pageBusinesses = businesses.slice(start, end);
+    var links = {};
+
+    if (page < lastPage) {
+        links.nextPage = '/photos/:photoID/businesses?page=' + (page + 1);
+        links.lastPage = '/photos/:photoID/businesses?page=' + lastPage;
+    }
+    if (page > 1) {
+        links.prevPage = '/photos/:photoID/businesses?page=' + (page - 1);
+        links.firstPage = '/photos/:photoID/businesses?page=1';
+    }  
+    
+    if (photos[photoID]) {
+        res.status(200).json({
+        pageNumber: page,
+        totalPages: lastPage,
+        pageSize: numPerPage,
+        totalCount: businesses.length,
+        businesses: pageBusinesses[photoID],
+        links: links});
+    } else {
+        next();
+    }
+});
+
+// Get photos for a certain review ID
+app.get('/photos/:photoID/reviews', (req, res, next) => {
+    var photoID = parseInt(req.params.photoID);
+    var page = parseInt(req.query.page) || 1;
+    var numPerPage = 10;
+    var lastPage = Math.ceil(reviews.length / numPerPage);
+    page = page < 1 ? 1 : page;
+    page = page > lastPage ? lastPage : page;
+    var start = (page - 1) * numPerPage;
+    var end = start + numPerPage;
+    var pagereviews = reviews.slice(start, end);
+    var links = {};
+
+    if (page < lastPage) {
+        links.nextPage = '/photos/:photoID/reviews?page=' + (page + 1);
+        links.lastPage = '/photos/:photoID/reviews?page=' + lastPage;
+    }
+    if (page > 1) {
+        links.prevPage = '/photos/:photoID/reviews?page=' + (page - 1);
+        links.firstPage = '/photos/:photoID/reviews?page=1';
+    }  
+    
+    if (photos[photoID]) {
+        res.status(200).json({
+        pageNumber: page,
+        totalPages: lastPage,
+        pageSize: numPerPage,
+        totalCount: reviews.length,
+        reviews: pagereviews[photoID],
+        links: links});
     } else {
         next();
     }

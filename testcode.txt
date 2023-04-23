@@ -2,34 +2,51 @@ CURL TEST COMMANDS:
 
 Business Tests:
 
-List details of a specific businesses:                    
+User may fetch detailed information about a business:
 curl -v http://localhost:3000/businesses/2
 
-View all businesses:
+User may get a list of businesses:
 curl -v http://localhost:3000/businesses
 
-Post a new business:
-curl -v -X POST -H 'Content-Type: application/json' -d '{"businessName": "Test123", "businessAddress": "123 Cherry Tree Lane", "businessCity": "Bend", "businessState": "Oregon", "businessZip": "55555", "businessPhone": "555-123-4567", "businessCategory": "Restaurant", "businessSubcategory": "Pizza", "businessWebsite": "", "businessEmail": ""}' http://localhost:3000/businesses
+Business owners can add their business to the application:
+curl -v POST -H 'Content-Type: application/json' -d '{"businessName": "Test123", "businessAddress": "123 Cherry Tree Lane", "businessCity": "Bend", "businessState": "Oregon", "businessZip": "55555", "businessPhone": "555-123-4567", "businessCategory": "Restaurant", "businessSubcategory": "Pizza", "businessWebsite": "", "businessEmail": ""}' http://localhost:3000/businesses
 
-Now we can update this new business we just made:
+Business owners may modify any information listed above for an already existing business:
 curl -v -X PUT -H 'Content-Type: application/json' -d '{"businessName": "Test123", "businessAddress": "456 New Address Lane", "businessCity": "WeMoved", "businessState": "Oregon", "businessZip": "55555", "businessPhone": "555-123-4567", "businessCategory": "Restaurant", "businessSubcategory": "Pizza", "businessWebsite": "", "businessEmail": ""}' http://localhost:3000/businesses/3
 
-Delete an existing business:
+Business owners may remove a business listing from the application:
 curl -v -X DELETE http://localhost:3000/businesses/3
 
 -----
 
 Review Tests:
 
-Post a new review:
-curl -v -X POST -H 'Content-Type: application/json' -d '{"starRating": "3", "costRating": "1"}' http://localhost:3000/reviews
+Users may write a review of an existing business:
+curl -v POST -H 'Content-Type: application/json' -d '{"starRating": "3", "costRating": "1"}' http://localhost:3000/reviews
 
-Update an existing review:
+Check that the range verification when posting a new review:
+Range is 0 -> 5 for starRating and 1 -> 4 for costRating.
+curl -v POST -H 'Content-Type: application/json' -d '{"starRating": "7", "costRating": "0"}' http://localhost:3000/reviews
+^ This should not post since it does not meet our specifications.
+
+Users may modify a review:
 curl -v -X PUT -H 'Content-Type: application/json' -d '{"starRating": "5", "costRating": "2"}' http://localhost:3000/reviews/1
 
-Delete an existing review:
+Users may delete a review:
 curl -v -X DELETE http://localhost:3000/reviews/2
 
 -----
 
 Photo Tests:
+
+Users may upload files containing photos of a business with a caption:
+
+Users may remove photos they've uploaded:
+
+Users may modify the caption of a photo:
+
+Uers may list all the businesses they own:
+
+Users may list all the reviews they've uploaded:
+
+Users may list all the photos they've uploaded:
