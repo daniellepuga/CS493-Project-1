@@ -6,7 +6,6 @@ const PORT = 3000;
 // pretty print for JSON
 app.set('json spaces', 4);
 
-
 const jsonParser = bodyParser.json();
 
 // for project we can use an array and do post requests to 
@@ -26,67 +25,67 @@ app.listen(PORT, (error) => {
 
 // test arrays with all fields.
 let businesses = [
-    { businessName: "Benderoni",
-      businessAddress: "123 Cherry Tree Lane",
-      businessCity: "Bend",
-      businessState: "Oregon",
-      businessZip: "55555",
-      businessPhone: "555-123-4567",
-      businessCategory: "Restaurant",
-      businessSubcategory: "Pizza",
-      businessWebsite: "",
-      businessEmail: "",
+    { name: "Benderoni",
+      address: "123 Cherry Tree Lane",
+      city: "Bend",
+      state: "Oregon",
+      zip: "55555",
+      phone: "555-123-4567",
+      category: "Restaurant",
+      subcategory: "Pizza",
+      website: "",
+      email: "",
     },
 
-    { businessName: "Casa Bonita",
-      businessAddress: "151 Yippee Ave",
-      businessCity: "Denver",
-      businessState: "CO",
-      businessZip: "12345",
-      businessPhone: "555-420-6969",
-      businessCategory: "Restaurant",
-      businessSubcategory: "Mexican",
-      businessWebsite: "",
-      businessEmail: "casa@bonita.com",
+    { name: "Casa Bonita",
+      address: "151 Yippee Ave",
+      city: "Denver",
+      state: "CO",
+      zip: "12345",
+      phone: "555-420-6969",
+      category: "Restaurant",
+      subcategory: "Mexican",
+      website: "",
+      email: "casa@bonita.com",
     },
 
-    { businessName: "Chop Shop",
-    businessAddress: "9541 Snack St",
-    businessCity: "Cookington",
-    businessState: "OR",
-    businessZip: "13372",
-    businessPhone: "555-1357-1111",
-    businessCategory: "Shop",
-    businessSubcategory: "Food Service",
-    businessWebsite: "https://www.shoptillyouchop.com",
-    businessEmail: "",
+    { name: "Chop Shop",
+    address: "9541 Snack St",
+    city: "Cookington",
+    state: "OR",
+    zip: "13372",
+    phone: "555-1357-1111",
+    category: "Shop",
+    subcategory: "Food Service",
+    website: "https://www.shoptillyouchop.com",
+    email: "",
     },
 
-    { businessName: "Los Pollos Hermanos",
-    businessAddress: "308 Negra Arroyo Lane",
-    businessCity: "Albequerque",
-    businessState: "NM",
-    businessZip: "87104",
-    businessPhone: "555-111-2222",
-    businessCategory: "Restaurant",
-    businessSubcategory: "Fast Food",
-    businessWebsite: "",
-    businessEmail: "gustavo@fring.com",
+    { name: "Los Pollos Hermanos",
+    address: "308 Negra Arroyo Lane",
+    city: "Albequerque",
+    state: "NM",
+    zip: "87104",
+    phone: "555-111-2222",
+    category: "Restaurant",
+    subcategory: "Fast Food",
+    website: "",
+    email: "gustavo@fring.com",
     },
 ]
 
 let reviews = [
-    { starRating: 0,
+    { stars: 0,
       costRating: 1,
       reviewContent: "YIKES.",
     },
 
-    { starRating: 3,
+    { stars: 3,
       costRating: 2,
       reviewContent: "Averagely average. Might return.",
     },
 
-    { starRating: 5,
+    { stars: 5,
       costRating: 4,
       reviewContent: "Sacrificed my life savings to go here, but it was so worth it!",
     },
@@ -103,6 +102,10 @@ app.get('/', (req, res) => {
     res.status(200);
     res.send("Welcome to root URL of the Project 1 server");
 });
+
+function validate(){
+
+}
 
 // Businesses API endpoints & page logic
 app.get('/businesses', (req, res) => {
@@ -139,12 +142,12 @@ app.use(express.json());
 // use Postman to test this
 // Post a new business
 app.post('/businesses', jsonParser, (req, res) => {
-    if (req.body && req.body.businessName) {
+    if (req.body && req.body.name) {
         businesses.push(req.body);
         res.json({"status": "ok"});
     } else {
         res.status(400).json({
-            err: "Request needs a JSON body with a businessName field"
+            err: "Request needs a JSON body with a name field"
         });
     }
 
@@ -171,7 +174,7 @@ app.get('/businesses/:businessID', (req, res, next) => {
 app.put('/businesses/:businessID', (req, res) => {
     var businessID = parseInt(req.params.businessID);
     if (businesses[businessID]) {
-        if (req.body && req.body.businessName) {
+        if (req.body && req.body.name) {
             businesses[businessID] = req.body;
             res.status(200).json({
                 links: {
@@ -180,7 +183,7 @@ app.put('/businesses/:businessID', (req, res) => {
         });
         } else {
             res.status(400).json({
-                err: "Request needs a JSON body with a businessName field"
+                err: "Request needs a JSON body with a name field"
             });
         }
     } else {
@@ -232,8 +235,8 @@ app.get('/reviews', (req, res) => {
 
 // Post a review
 app.post('/reviews', jsonParser, (req, res) => {
-    if (req.body && req.body.starRating && req.body.costRating) {
-        if(req.body.starRating > -1 && req.body.starRating < 6){
+    if (req.body && req.body.stars && req.body.costRating) {
+        if(req.body.stars > -1 && req.body.stars < 6){
             if(req.body.costRating > 0 && req.body.costRating <  5){
         reviews.push(req.body);
         res.json({"status": "200 OK"});}}
@@ -256,8 +259,8 @@ app.post('/reviews', jsonParser, (req, res) => {
 app.put('/reviews/:reviewID', (req, res, next) => {
     var reviewID = parseInt(req.params.reviewID);
     if (reviews[reviewID]) {
-        if (req.body && req.body.starRating && req.body.costRating) {
-            if(req.body.starRating > -1 && req.body.starRating < 6){
+        if (req.body && req.body.stars && req.body.costRating) {
+            if(req.body.stars > -1 && req.body.stars < 6){
                 if(req.body.costRating > 0 && req.body.costRating < 5){
                     reviews[reviewID] = req.body;
                     res.status(200).json({
