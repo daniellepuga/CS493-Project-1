@@ -40,10 +40,10 @@ curl -v -X DELETE http://localhost:3000/reviews/2
 Photo Tests:
 
 Users may upload files containing photos of a business with a caption:
-curl -v POST -H 'Content-Type: application/json' -d '{"imageSrc": "/testphoto.jpg", "imageCaption": "Wowee!!"}'
+curl -v POST -H 'Content-Type: application/json' -d '{"imageSrc": "/testphoto.jpg", "imageCaption": "Wowee!!"}' http://localhost:3000/photos
 
 Users may remove photos they've uploaded:
 curl -v -X DELETE http://localhost:3000/photos/2
 
 Users may modify the caption of a photo:
-curl -v -X PUT -H 'Content-Type: application/json' -d '{"imageFile": "/test2.jpg", "caption": "This is a test caption"}' http://localhost:3000/photos/1
+curl -v -X PUT -H 'Content-Type: application/json' -d '{"imageSrc": "/test2.jpg", "caption": "This is a test caption"}' http://localhost:3000/photos/1

@@ -331,7 +331,7 @@ app.get('/photos', (req, res) => {
 
 // Add photo similar to previous post endpoints
 app.post('/photos', jsonParser, (req, res) => {
-    if (req.body && req.body.imageFile) {
+    if (req.body && req.body.imageSrc) {
         photos.push(req.body);
         res.json({"status": "ok"});
     } else {
@@ -353,7 +353,7 @@ app.post('/photos', jsonParser, (req, res) => {
 app.put('/photos/:photoID', (req, res, next) => {
     var photoID = parseInt(req.params.photoID);
     if (photos[photoID]) {
-        if (req.body && req.body.imageFile) {
+        if (req.body && req.body.imageSrc) {
             photos[photoID] = req.body;
             res.status(200).json({
                 links: {
@@ -381,75 +381,44 @@ app.delete('/photos/:photoID', (req, res, next) => {
     }
 });
 
-// Get photos for only specific business
-app.get('/photos/:photoID/businesses', (req, res, next) => {
-    var photoID = parseInt(req.params.photoID);
-    var page = parseInt(req.query.page) || 1;
-    var numPerPage = 10;
-    var lastPage = Math.ceil(businesses.length / numPerPage);
-    page = page < 1 ? 1 : page;
-    page = page > lastPage ? lastPage : page;
-    var start = (page - 1) * numPerPage;
-    var end = start + numPerPage;
-    var pageBusinesses = businesses.slice(start, end);
-    var links = {};
+// // Get photos for only specific business
+// FIXME: implement this when we start user verification and ownership
 
-    if (page < lastPage) {
-        links.nextPage = '/photos/:photoID/businesses?page=' + (page + 1);
-        links.lastPage = '/photos/:photoID/businesses?page=' + lastPage;
-    }
-    if (page > 1) {
-        links.prevPage = '/photos/:photoID/businesses?page=' + (page - 1);
-        links.firstPage = '/photos/:photoID/businesses?page=1';
-    }  
+// app.get('/photos/:photoID/businesses', (req, res, next) => {
+//     var photoID = parseInt(req.params.photoID);
+//     var page = parseInt(req.query.page) || 1;
+//     var numPerPage = 10;
+//     var lastPage = Math.ceil(businesses.length / numPerPage);
+//     page = page < 1 ? 1 : page;
+//     page = page > lastPage ? lastPage : page;
+//     var start = (page - 1) * numPerPage;
+//     var end = start + numPerPage;
+//     var pageBusinesses = businesses.slice(start, end);
+//     var links = {};
+
+//     if (page < lastPage) {
+//         links.nextPage = '/photos/:photoID/businesses?page=' + (page + 1);
+//         links.lastPage = '/photos/:photoID/businesses?page=' + lastPage;
+//     }
+//     if (page > 1) {
+//         links.prevPage = '/photos/:photoID/businesses?page=' + (page - 1);
+//         links.firstPage = '/photos/:photoID/businesses?page=1';
+//     }  
     
-    if (photos[photoID]) {
-        res.status(200).json({
-        pageNumber: page,
-        totalPages: lastPage,
-        pageSize: numPerPage,
-        totalCount: businesses.length,
-        businesses: pageBusinesses[photoID],
-        links: links});
-    } else {
-        next();
-    }
-});
+//     if (photos[photoID]) {
+//         res.status(200).json({
+//         pageNumber: page,
+//         totalPages: lastPage,
+//         pageSize: numPerPage,
+//         totalCount: businesses.length,
+//         businesses: pageBusinesses[photoID],
+//         links: links});
+//     } else {
+//         next();
+//     }
+// });
 
 // Get photos for a certain review ID
-app.get('/photos/:photoID/reviews', (req, res, next) => {
-    var photoID = parseInt(req.params.photoID);
-    var page = parseInt(req.query.page) || 1;
-    var numPerPage = 10;
-    var lastPage = Math.ceil(reviews.length / numPerPage);
-    page = page < 1 ? 1 : page;
-    page = page > lastPage ? lastPage : page;
-    var start = (page - 1) * numPerPage;
-    var end = start + numPerPage;
-    var pagereviews = reviews.slice(start, end);
-    var links = {};
-
-    if (page < lastPage) {
-        links.nextPage = '/photos/:photoID/reviews?page=' + (page + 1);
-        links.lastPage = '/photos/:photoID/reviews?page=' + lastPage;
-    }
-    if (page > 1) {
-        links.prevPage = '/photos/:photoID/reviews?page=' + (page - 1);
-        links.firstPage = '/photos/:photoID/reviews?page=1';
-    }  
-    
-    if (photos[photoID]) {
-        res.status(200).json({
-        pageNumber: page,
-        totalPages: lastPage,
-        pageSize: numPerPage,
-        totalCount: reviews.length,
-        reviews: pagereviews[photoID],
-        links: links});
-    } else {
-        next();
-    }
-});
 
 // end catch all for paths we havent specified
 app.use('*', function (req, res) {
